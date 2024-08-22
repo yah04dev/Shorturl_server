@@ -36,6 +36,15 @@ def redirection(x):
     cursor.execute(com)
     link = cursor.fetchall()
     link=list(link[0])[0]
-    return redirect(link)
+    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    cursor.execute('''
+        UPDATE links
+        SET VT = VT + 1,
+            LV = ?
+        WHERE id = ?
+    ''', (current_time,x))
+    connection.commit() 
     connection.close()
+    return redirect(link)
+   
 app.run(debug=True)
