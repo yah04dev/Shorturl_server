@@ -46,5 +46,15 @@ def redirection(x):
     connection.commit() 
     connection.close()
     return redirect(link)
-   
+@app.route('/check')
+def check():
+    id = request.args.get('id')
+    cursor.execute('SELECT LV FROM links WHERE id =?', (id,) )
+    lv = cursor.fetchone()
+    cursor.execute('SELECT VT FROM links WHERE id =?', (id,) )
+    vt = cursor.fetchone()
+    data=["id",id,"totalVisite",vt,"LastVisite",lv]
+    connection.close()
+    return render_template('view.html',data=data)
+
 app.run(debug=True)
