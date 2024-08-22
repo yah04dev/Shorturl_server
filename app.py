@@ -10,8 +10,7 @@ def index():
 @app.route('/create')
 def create():
    link = request.args.get('link')
-   com="INSERT INTO links (rlink) VALUES('"+link+"');"
-   cursor.execute(com)
+   cursor.execute('''INSERT INTO links (rlink, LV,owi,VT) VALUES (?, ?,?,?)''', (link, current_time,0,"0"))
    com="SELECT id FROM links WHERE rlink = "+link
    id = cursor.fetchall()
    id=list(id[0])[0]
