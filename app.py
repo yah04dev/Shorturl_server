@@ -1,7 +1,8 @@
 from flask import redirect,flash, url_for, Flask, request, render_template, make_response
 import sqlite3
 from datetime import datetime
-
+import time
+timeofSleep=3
 app = Flask(__name__)
 import string    
 import random 
@@ -9,9 +10,6 @@ app.secret_key = "hello"
 def get_db_connection():
     connection = sqlite3.connect('links.db', check_same_thread=False)
     return connection
-
-
-
 @app.route('/create', methods=['POST'])
 def create():
    S = 5
@@ -65,7 +63,8 @@ def redirection(x):
     cursor.execute(''' UPDATE links  SET VT = VT + 1, LV = ? WHERE id = ? ''', (current_time, x))
     connection.commit()
     connection.close()
-    
+
+    time.sleep(timeofSleep)
     return redirect(link)
 
 @app.route('/dele', methods=['GET'])
@@ -85,7 +84,6 @@ def check():
  owi = request.form.get('owk')
  cursor.execute("SELECT EXISTS (SELECT 1 FROM links WHERE owi = ?)", (owi,))
  chke = cursor.fetchone()
- print(chke)
  if list(chke)[0]==0 :    
   
   return "<p>Doesnt Exist !</p>"
@@ -109,4 +107,4 @@ def check():
     return f"<p>id : {data[0]}</p> </br> <p>last visite: {data[1]}</p> </br> <p>total visits :{data[2]} </p>  </br><a href='/dele?owk={owi}'>delete</a>  "
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0",port=5001)
