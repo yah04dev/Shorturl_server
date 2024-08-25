@@ -4,16 +4,13 @@ from datetime import datetime
 
 app = Flask(__name__)
 import string    
-import random # define the random module  
+import random 
 app.secret_key = "hello"
 def get_db_connection():
     connection = sqlite3.connect('links.db', check_same_thread=False)
     return connection
 
-@app.route('/')
-def index():
-    
-    return render_template('index.html')
+
 
 @app.route('/create', methods=['POST'])
 def create():
@@ -45,11 +42,14 @@ def create():
    cursor.execute('SELECT id FROM links WHERE rlink = ?', (link,))
    id = list(cursor.fetchall()[-1:][0])[0]
    connection.close()
-   id=url+"r/"+str(id)
+   id=url+str(id)
    return f"<p>Your link is: {id}</p></br><p>your owner key is : {owk}</p>"
-
-@app.route('/r/<x>')
+@app.route('/')
+def index():
+   return render_template('index.html')
+@app.route('/<x>')
 def redirection(x):
+
     connection = get_db_connection()
     cursor = connection.cursor()
     
@@ -57,7 +57,7 @@ def redirection(x):
     link = cursor.fetchone()
     
     if not link:
-        return "Link not found", 404
+    	   return "Link not found", 404
     
     link = link[0]
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -73,14 +73,23 @@ def dele():
     owi=request.args.get("owk")
     connection = get_db_connection()
     cursor = connection.cursor()
-    cursor = connection.cursor()
+
     cursor.execute('DELETE FROM links WHERE owi = ?', (owi,))
     connection.commit()
     flash('deleted !')
     return redirect(url_for('index'))
 @app.route('/check', methods=['POST'])
 def check():
-    owi = request.form.get('owk')
+ connection = get_db_connection()
+ cursor = connection.cursor()
+ owi = request.form.get('owk')
+ cursor.execute("SELECT EXISTS (SELECT 1 FROM links WHERE owi = ?)", (owi,))
+ chke = cursor.fetchone()
+ print(chke)
+ if list(chke)[0]==0 :    
+  
+  return "<p>Doesnt Exist !</p>"
+ else:
     
     connection = get_db_connection()
     cursor = connection.cursor()
