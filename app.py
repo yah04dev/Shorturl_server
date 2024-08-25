@@ -2,7 +2,7 @@ from flask import redirect,flash, url_for, Flask, request, render_template, make
 import sqlite3
 from datetime import datetime
 import time
-timeofSleep=3
+timeofSleep=0
 app = Flask(__name__)
 import string    
 import random 
