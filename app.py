@@ -130,4 +130,4 @@ def check():
     return f"<p>id : {data[0]}</p> </br> <p>last visite: {data[1]}</p> </br> <p>total visits :{data[2]} </p>  </br><a href='/dele?owk={owi}'>delete</a>  "
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",debug=True,port=5001)
+    app.run(host="0.0.0.0",port=5001)
