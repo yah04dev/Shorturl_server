@@ -45,6 +45,29 @@ def create():
 @app.route('/')
 def index():
    return render_template('index.html')
+@app.route('/r')
+def redi():
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    cursor.execute('SELECT rid FROM links ORDER BY rid DESC LIMIT 1;')
+    rid=cursor.fetchone()
+    rid=random.randint(1,int(rid[0]))
+
+    cursor.execute('SELECT rlink FROM links WHERE rid = ?', (rid,))
+    link = cursor.fetchone()
+    
+    if not link:
+    	   return "Link not found", 404
+    
+    link = link[0]
+    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    cursor.execute(''' UPDATE links  SET VT = VT + 1, LV = ? WHERE rid = ? ''', (current_time, rid))
+    connection.commit()
+    connection.close()
+
+    time.sleep(timeofSleep)
+    return redirect(link)
 @app.route('/<x>')
 def redirection(x):
 
@@ -107,4 +130,4 @@ def check():
     return f"<p>id : {data[0]}</p> </br> <p>last visite: {data[1]}</p> </br> <p>total visits :{data[2]} </p>  </br><a href='/dele?owk={owi}'>delete</a>  "
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",port=5001)
+    app.run(host="0.0.0.0",debug=True,port=5001)
