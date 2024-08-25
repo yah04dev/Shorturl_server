@@ -1,19 +1,28 @@
 <html>
+ <head> <script src="https://unpkg.com/htmx.org@2.0.2"></script> </head>
 <body>
-<center><h1>Welcome to Shorturl</h1></center>
-<center><h2>please enter your long link to make it as small as ur thumb nail</h2></center>
-<center>  <form action="/create" method="get">
-  <input type="text" id="link" name="link"><br><br>
-  <input type="submit" value="Create">
-</form> 
-</center>
-</br></br>
-<center><h2>Enter your id to check views</h2></center>
-<center>  <form action="/check" method="get">
-  <input type="text" id="id" name="id"><br><br>
-  <input type="submit" value="Check">
-</form> 
-</center>
+    <center><h1>Welcome to Shorturl</h1></center>
+    <center><h2>Please enter your long link to make it as small as your thumbnail</h2></center>
+    <center> 
 
+        <form hx-post="/create" hx-target="this">
+            <input type="url" name="link" id="link" />
+            <button type="submit">Create</button>
+        </form>
+    </center>
+    </br></br>
+    <center><h2>Enter your owner key to check views</h2></center>
+    <center>
+        {% with messages = get_flashed_messages() %}
+  {% if messages %}
+     <p>deleted !</p>
+  {% endif %}
+{% endwith %}
+{% block body %}{% endblock %}
+        <form hx-post="/check" hx-target="this">
+            <input type="text" name="owk" id="owk" />
+            <button type="submit">Check</button>
+        </form>
+    </center>
 </body>
 </html>
